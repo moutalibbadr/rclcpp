@@ -114,6 +114,7 @@ def get_rclcpp_suffix_from_features(features):
 @[ end for]@
 @[ if 'stream' not in feature_combination]@
  * \param ... The format string, followed by the variable arguments for the format string.
+ * It also accepts a single argument of type std::string.
 @[ end if]@
  */
 @{params = rclcpp_feature_combinations[feature_combination].params.keys()}@
@@ -140,8 +141,8 @@ def get_rclcpp_suffix_from_features(features):
     }; \
 @[ end if] \
 @[ if 'stream' in feature_combination]@
-    std::stringstream rclcpp_stream_ss_; \
-    rclcpp_stream_ss_ << @(stream_arg); \
+    std::stringstream ss; \
+    ss << @(stream_arg); \
 @[ end if]@
     RCUTILS_LOG_@(severity)@(get_suffix_from_features(feature_combination))_NAMED( \
 @{params = ['get_time_point' if p == 'clock' and 'throttle' in feature_combination else p for p in params]}@
@@ -152,7 +153,7 @@ def get_rclcpp_suffix_from_features(features):
 @[ if 'stream' not in feature_combination]@
       __VA_ARGS__); \
 @[ else]@
-      "%s", rclcpp_stream_ss_.str().c_str()); \
+      "%s", ss.str().c_str()); \
 @[ end if]@
   } while (0)
 
